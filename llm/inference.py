@@ -9,7 +9,7 @@ from model import GPTConfig, GPT
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", default="checkpoints/gpt_wikitext2.pt")
-    ap.add_argument("--prompt", default="The meaning of life is")
+    ap.add_argument("--prompt", default="New York is a city in ")
     ap.add_argument("--gen_len", type=int, default=200)
     ap.add_argument("--temp", type=float, default=0.9)
     ap.add_argument("--top_k", type=int, default=50)

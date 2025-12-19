@@ -32,7 +32,7 @@ def save_checkpoint(path, model, cfg: GPTConfig, tokenizer_json_path: str, step:
         "step": step,
         "config": cfg.__dict__,
         "model_state_dict": model.state_dict(),
-        "tokenizer_path": tokenizer_json_path,  # 推理时 load
+        "tokenizer_path": tokenizer_json_path,
     }
     torch.save(payload, path)
     print(f"[saved] {path} (step={step})")
@@ -42,17 +42,14 @@ def main():
     device = get_device()
     print("Device:", device)
 
-    # 1) 训练/加载 tokenizer（只用 train split 的文本训练 tokenizer）
     train_texts, _ = load_wikitext2_text()
     tok = train_or_load_tokenizer(train_texts, TOKENIZER_PATH, vocab_size=8000)
     vocab_size = tok.get_vocab_size()
     print("Tokenizer vocab_size:", vocab_size)
 
-    # 2) 构建 token dataset
     ds = build_token_dataset(tok, device=device, block_size=BLOCK_SIZE, batch_size=BATCH_SIZE)
     print("Token dataset lens:", ds["train_len"], ds["val_len"])
 
-    # 3) 模型（稍微放大一点）
     cfg = GPTConfig(
         block_size=BLOCK_SIZE,
         n_layers=6,
@@ -80,7 +77,6 @@ def main():
             dt = time.time() - t0
             print(f"step {step:5d}/{MAX_STEPS} | train {losses['train']:.4f} | val {losses['val']:.4f} | {dt:.1f}s")
 
-            # 生成 sample：用 <bos> 或简单 prompt
             bos_id = tok.token_to_id("<bos>")
             idx0 = torch.tensor([[bos_id]], dtype=torch.long, device=device)
             out = generate(model, idx0, max_new_tokens=GEN_LEN, temperature=TEMPERATURE, top_k=TOP_K)[0].tolist()
