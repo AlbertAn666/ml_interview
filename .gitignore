@@ -1,2 +1,9 @@
 .venv
-regression/data/
+*/data/
+*/checkpoints/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
