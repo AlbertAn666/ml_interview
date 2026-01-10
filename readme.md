@@ -10,3 +10,6 @@ Toy generative model, pre-train pipeline
 
 **regression**
 regression models
+
+**notebook**
+toy models in notebook to prepare for ML interviews
